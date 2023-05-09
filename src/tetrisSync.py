@@ -7,11 +7,11 @@ import pygame #version 1.9.3
 import random
 import math
 import sys
-from platforms.desktop.desktop_handler import DesktopHandler
-from specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
-from languages.asp.asp_mapper import ASPMapper
-from languages.asp.asp_input_program import ASPInputProgram
-from languages.asp.answer_sets import AnswerSets
+from lib.embasp.platforms.desktop.desktop_handler import DesktopHandler
+from lib.embasp.specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
+from lib.embasp.languages.asp.asp_mapper import ASPMapper
+from lib.embasp.languages.asp.asp_input_program import ASPInputProgram
+from lib.embasp.languages.asp.answer_sets import AnswerSets
 from AiSync import AiSync
 from Cell import Cell
 from CurrentPiece import CurrentPiece
@@ -45,11 +45,11 @@ GAMEOVER_FONT_SIZE = 66
 TITLE_FONT_SIZE = 65
 VERSION_FONT_SIZE = 20
 
-fontSB = pygame.font.Font('src/Gameplay.ttf', SB_FONT_SIZE)
-fontSmall = pygame.font.Font('src/Gameplay.ttf', FONT_SIZE_SMALL)
-fontPAUSE = pygame.font.Font('src/Gameplay.ttf', PAUSE_FONT_SIZE)
-fontGAMEOVER = pygame.font.Font('src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
-fontTitle = pygame.font.Font('src/Gameplay.ttf', TITLE_FONT_SIZE)
+fontSB = pygame.font.Font('../src/Gameplay.ttf', SB_FONT_SIZE)
+fontSmall = pygame.font.Font('../src/Gameplay.ttf', FONT_SIZE_SMALL)
+fontPAUSE = pygame.font.Font('../src/Gameplay.ttf', PAUSE_FONT_SIZE)
+fontGAMEOVER = pygame.font.Font('../src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
+fontTitle = pygame.font.Font('../src/Gameplay.ttf', TITLE_FONT_SIZE)
 fontVersion = pygame.font.SysFont('arial', VERSION_FONT_SIZE)
 
 ROW = (0)
@@ -155,7 +155,7 @@ class GameClock:
 		self.frameTick = self.frameTick + 1
 	
 	def speedup(self):
-		self.fall = self.TimingType(4)
+		self.fall = self.TimingType(1)
 		
 
 # Class for all the game mechanics, visuals and events
@@ -440,8 +440,6 @@ class MainBoard:
 				clearedLinesNum = clearedLinesNum + 1
 				
 		self.score = self.score + (self.level+1)*baseLinePoints[clearedLinesNum] + self.piece.dropScore
-		if self.score > 999999:
-			self.score = 999999
 		self.lines = self.lines + clearedLinesNum
 		self.level = STARTING_LEVEL + math.floor(self.lines/10)
 		if self.level > 99:
@@ -783,7 +781,7 @@ def makeTextObjs(text, font, color):
 
 def showTextScreen(text):
 	loop = True
-	image = pygame.image.load("src/tetris.jpg")
+	image = pygame.image.load("../src/tetris.jpg")
 	screenUpdate = pygame.transform.scale(image, (800, 600))
 	gameDisplay.blit(screenUpdate,(0,0))
 	titleSurf, titleRect = makeTextObjs(text, fontTitle, WHITE)
