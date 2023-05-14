@@ -7,6 +7,7 @@ from Cell import Cell
 from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
+from lib.embasp.languages.asp.asp_filter_option import OptionDescriptor
 
 
 class AiAsync():
@@ -25,6 +26,10 @@ class AiAsync():
         self.fixedProgram.add_files_path(AiAsync.file_name)
         self.handler.add_program(self.fixedProgram)
         self.handler.add_program(self.variableProgram)
+        o = OptionDescriptor("--filter=output/2")
+        self.handler.add_option(o)
+
+
 
     def changeVariableProgram(self,matrix,currentPiece):
             for i in range(20):

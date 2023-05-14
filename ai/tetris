@@ -74,10 +74,11 @@ fullRows(X) :- row(X), #count{Y : newcell(X,Y,1)} = 10.
 
 
 % differenza tra le altezze delle colonne
+number(-20..20).
 minNewCell(V,Y):- col(Y), #min{R : newcell(R,Y,1)} = V.
 minNewCell(V,Y) :- col(Y), not presente(Y), V=19.
 presente(Y) :- newcell(_,Y,1).
-:~ minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2. [S@3,Y1,Y2] %3
+:~ minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2, number(V). [S@3,Y1,Y2] %3
 
 %preferisci posizione piu bassa
 :~ newcell(X,_,1), X<8. [4@3]

@@ -17,6 +17,9 @@ from Cell import Cell
 from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
+import sys, os
+sys.stdout = open(os.devnull, "w")
+
 
 pygame.init()
 pygame.font.init()

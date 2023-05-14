@@ -19,6 +19,9 @@ from In import In
 from Output import Output
 from src.AiAsync import AiAsync
 
+import sys, os
+sys.stdout = open(os.devnull, "w")
+
 pygame.init()
 pygame.font.init()
 
@@ -156,7 +159,7 @@ class GameClock:
 		self.frameTick = self.frameTick + 1
 	
 	def speedup(self):
-		self.fall = self.TimingType(1)
+		self.fall = self.TimingType(4)
 		
 
 # Class for all the game mechanics, visuals and events
