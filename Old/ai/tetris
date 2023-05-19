@@ -36,7 +36,7 @@ block(1,"z",1,-1,0). block(2,"z",1,0,1). block(3,"z",1,-1,0). %2
 in(X,Y,PIECE,ROTATION) | out(X,Y,PIECE,ROTATION) :- cell(X,Y,0), currentpiece(PIECE), rotation(PIECE,ROTATION), minCellPerColumn(X1,Y), X>=X1-4.
 :- in(X,Y,V,ROTATION), in(X1,Y1,V,ROTATION1), ROTATION!=ROTATION1. % non ci possono essere due pezzi con rotazione diversa
 
-minCellPerColumn(X,Y):- col(Y), #min{R : cell(R,Y,1)} = X.
+minCellPerColumn(X,Y):- col(Y), #min{R : cell(R,Y,1)} = X, cell(_,Y,1).
 minCellPerColumn(X,Y) :- col(Y), X=19.
 
 :- #count{X,Y : in(X,Y,PIECE,ROTATION), currentpiece(PIECE)} != 4.
@@ -55,28 +55,30 @@ hasbelow(PIECE) :- in(X,Y,PIECE,ROTATION), cell(X+1,Y,1).
 
 % matrice su cui si applicheranno i weak constraints
 newcell(X,Y,1) :- in(X,Y,PIECE,ROTATION), currentpiece(PIECE).
-newcell(X,Y,PIECE) :- cell(X,Y,PIECE), not newcell(X,Y,PIECE1), currentpiece(PIECE1).
+newcell(X,Y,PIECE) :- cell(X,Y,PIECE), not ceunacella(X,Y).
+ceunacella(X,Y):- in(X,Y,PIECE,_), currentpiece(PIECE).
+
 
 minCol(M) :- #min{Y,X : in(X,Y,PIECE,R)} = M.
 output(M,R) :- minCol(M), in(X,M,_,R). 
 
 % linee completate
-fullRows(X) :- row(X), #count{Y : newcell(X,Y,1)} = 10. 
-:~ row(X), newcell(X,_,1), not fullRows(X). [2@3,X] %2
+fullRows(X) :- row(X), #count{Y : newcell(X,Y,1)} = 10.
+:~ row(X), not fullRows(X). [3@3,X] %2
+
+:~ newcell(X,9,1). [1@3, X]
+
 
 % numero di buchi
-:~ newcell(X,Y,0), newcell(X1,Y,1), X1<X. [1@3,X,Y]
+:~ newcell(X,Y,0), newcell(X1,Y,1), X1<X. [6@3,X,Y]
+
 
 % differenza tra le altezze delle colonne
+number(-20..20).
 minNewCell(V,Y):- col(Y), #min{R : newcell(R,Y,1)} = V.
-minNewCell(V,Y) :- col(Y), not presente(Y), V=20.
-presente(Y) :- newcell(_,Y,1). 
-:~ minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2. [S@2,Y1,Y2] %3
+minNewCell(V,Y) :- col(Y), not presente(Y), V=19.
+presente(Y) :- newcell(_,Y,1).
+:~ minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2, number(V). [S@3,Y1,Y2] %3
 
-% blocco vuoto singolo
-oneBlock(X,Y) :- newcell(X,Y-1,1), newcell(X,Y,0), newcell(X,Y+1,1).
-oneBlock(X,0) :- newcell(X,0,0), newcell(X,1,1).
-oneBlock(X,9) :- newcell(X,9,0), newcell(X,8,1).
-:~ row(X), col(Y), oneBlock(X,Y). [1@2,X,Y]
-
-:~ newcell(X,_,1), X<10. [2@3]
+%preferisci posizione piu bassa
+:~ newcell(X,_,1), X<8. [4@3]

@@ -1,18 +1,19 @@
-from platforms.desktop.desktop_handler import DesktopHandler
-from specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
-from languages.asp.asp_mapper import ASPMapper
-from languages.asp.asp_input_program import ASPInputProgram
-from base.callback import Callback
+from lib.embasp.platforms.desktop.desktop_handler import DesktopHandler
+from lib.embasp.specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
+from lib.embasp.languages.asp.asp_mapper import ASPMapper
+from lib.embasp.languages.asp.asp_input_program import ASPInputProgram
+from lib.embasp.base.callback import Callback
 from Cell import Cell
 from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
+from lib.embasp.languages.asp.asp_filter_option import OptionDescriptor
 
 
 class AiAsync():
 
-    file_name = "ai/tetris"
-    executable_name = "executable/dlv-2.1.1-windows64.exe"
+    file_name = "../ai/tetris"
+    executable_name = "../executable/dlv-2.1.1-macos"
 
     def __init__(self):
         self.handler = DesktopHandler(DLV2DesktopService(AiAsync.executable_name))
@@ -25,6 +26,10 @@ class AiAsync():
         self.fixedProgram.add_files_path(AiAsync.file_name)
         self.handler.add_program(self.fixedProgram)
         self.handler.add_program(self.variableProgram)
+        o = OptionDescriptor("--filter=output/2")
+        self.handler.add_option(o)
+
+
 
     def changeVariableProgram(self,matrix,currentPiece):
             for i in range(20):

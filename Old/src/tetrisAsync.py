@@ -7,16 +7,20 @@ import pygame #version 1.9.3
 import random
 import math
 import sys
-from platforms.desktop.desktop_handler import DesktopHandler
-from specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
-from languages.asp.asp_mapper import ASPMapper
-from languages.asp.asp_input_program import ASPInputProgram
-from languages.asp.answer_sets import AnswerSets
-from AiAsync import AiAsync
+from lib.embasp.platforms.desktop.desktop_handler import DesktopHandler
+from lib.embasp.specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
+from lib.embasp.languages.asp.asp_mapper import ASPMapper
+from lib.embasp.languages.asp.asp_input_program import ASPInputProgram
+from lib.embasp.languages.asp.answer_sets import AnswerSets
+from AiSync import AiSync
 from Cell import Cell
 from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
+from src.AiAsync import AiAsync
+
+import sys, os
+sys.stdout = open(os.devnull, "w")
 
 pygame.init()
 pygame.font.init()
@@ -45,12 +49,12 @@ GAMEOVER_FONT_SIZE = 66
 TITLE_FONT_SIZE = 65
 VERSION_FONT_SIZE = 20
 
-fontSB = pygame.font.Font('src/Gameplay.ttf', SB_FONT_SIZE)
-fontSmall = pygame.font.Font('src/Gameplay.ttf', FONT_SIZE_SMALL)
-fontPAUSE = pygame.font.Font('src/Gameplay.ttf', PAUSE_FONT_SIZE)
-fontGAMEOVER = pygame.font.Font('src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
-fontTitle = pygame.font.Font('src/Gameplay.ttf', TITLE_FONT_SIZE)
-fontVersion = pygame.font.SysFont('arial', VERSION_FONT_SIZE)
+fontSB = pygame.font.Font('../src/Gameplay.ttf', SB_FONT_SIZE)
+fontSmall = pygame.font.Font('../src/Gameplay.ttf', FONT_SIZE_SMALL)
+fontPAUSE = pygame.font.Font('../src/Gameplay.ttf', PAUSE_FONT_SIZE)
+fontGAMEOVER = pygame.font.Font('../src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
+fontTitle = pygame.font.Font('../src/Gameplay.ttf', TITLE_FONT_SIZE)
+fontVersion = pygame.font.SysFont('../arial', VERSION_FONT_SIZE)
 
 ROW = (0)
 COL = (1)
@@ -773,7 +777,7 @@ def makeTextObjs(text, font, color):
 
 def showTextScreen(text):
 	loop = True
-	image = pygame.image.load("src/tetris.jpg")
+	image = pygame.image.load("../src/tetris.jpg")
 	screenUpdate = pygame.transform.scale(image, (800, 600))
 	gameDisplay.blit(screenUpdate,(0,0))
 	titleSurf, titleRect = makeTextObjs(text, fontTitle, WHITE)
