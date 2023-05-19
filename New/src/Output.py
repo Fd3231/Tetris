@@ -1,5 +1,5 @@
-from lib.embasp.languages.predicate import Predicate
-from lib.embasp.languages.asp.symbolic_constant import SymbolicConstant
+from languages.predicate import Predicate
+from languages.asp.symbolic_constant import SymbolicConstant
 
 class Output(Predicate):
     predicate_name="output"
