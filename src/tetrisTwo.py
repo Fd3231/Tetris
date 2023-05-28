@@ -739,9 +739,10 @@ def gameLoop():
 			matrix = mainBoard.getMatrix()
 			currentPiece = mainBoard.getCurrentPiece()
 			nextPiece = mainBoard.getNextPiece()
+			switch = True
 			if mainBoard.checkHeight():
-				nextPiece = None
-			aiPlayer.changeVariableProgram(matrix,currentPiece,nextPiece)
+				switch = False
+			aiPlayer.changeVariableProgram(matrix,currentPiece,nextPiece,switch)
 			aiPlayer.execute(mainBoard)
 			mainBoard.setNewPiece()
 		

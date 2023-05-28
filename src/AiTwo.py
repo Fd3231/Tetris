@@ -30,22 +30,22 @@ class AiTwo():
         self.variableProgram = ASPInputProgram()
         self.handler.add_program(self.fixedProgram)
         self.handler.add_program(self.variableProgram)
+        self.fixedProgram.add_files_path(AiTwo.mappings)
         o = OptionDescriptor("--filter=output/2")
         self.handler.add_option(o)
 
-    def changeVariableProgram(self,matrix,currentPiece,nextPiece):
+    def changeVariableProgram(self,matrix,currentPiece,nextPiece,switch):
         for i in range(20):
             for j in range(10):
                 self.variableProgram.add_object_input(Cell(i,j,matrix[i][j]))
         c = CurrentPiece(currentPiece)
-        if nextPiece != None:
+        if switch:
+            AiTwo.to_execute = AiTwo.file_name1
             n = NextPiece(nextPiece)
             self.variableProgram.add_object_input(n)
-            AiTwo.to_execute = AiTwo.file_name1
         else:
             AiTwo.to_execute = AiTwo.file_name2
-        self.fixedProgram.add_files_path(AiTwo.mappings)
-        self.fixedProgram.add_files_path(AiTwo.to_execute)
+        self.variableProgram.add_files_path(AiTwo.to_execute)
         self.variableProgram.add_object_input(c)
 
 
@@ -55,7 +55,6 @@ class AiTwo():
                       
     def clearVariableProgram(self):
         self.variableProgram.clear_all()
-        self.fixedProgram.clear_files_paths()
                 
 class MyCallback(Callback):
     def __init__(self,mainBoard):
