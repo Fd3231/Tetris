@@ -1,5 +1,4 @@
-% tetris1 con pezzo corrente e successivo
-
+% tetris1 con pezzo corrente e successivo. NON USATO
 row(0..19). col(0..9).
 
 piece(P,2) :- nextpiece(P).

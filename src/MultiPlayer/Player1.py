@@ -3,11 +3,11 @@
 # Date: 26.05.2018
 
 import pygame  # version 1.9.3
-import random
 import math
 import sys
-from AiTwo import AiTwo
 from antlr4.Recognizer import Recognizer
+from AiHandler import AiHandler
+from Network import Network
 
 pygame.init()
 pygame.font.init()
@@ -36,11 +36,11 @@ GAMEOVER_FONT_SIZE = 66
 TITLE_FONT_SIZE = 65
 VERSION_FONT_SIZE = 20
 
-fontSB = pygame.font.Font('src/Gameplay.ttf', SB_FONT_SIZE)
-fontSmall = pygame.font.Font('src/Gameplay.ttf', FONT_SIZE_SMALL)
-fontPAUSE = pygame.font.Font('src/Gameplay.ttf', PAUSE_FONT_SIZE)
-fontGAMEOVER = pygame.font.Font('src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
-fontTitle = pygame.font.Font('src/Gameplay.ttf', TITLE_FONT_SIZE)
+fontSB = pygame.font.Font('src/assets/Gameplay.ttf', SB_FONT_SIZE)
+fontSmall = pygame.font.Font('src/assets/Gameplay.ttf', FONT_SIZE_SMALL)
+fontPAUSE = pygame.font.Font('src/assets/Gameplay.ttf', PAUSE_FONT_SIZE)
+fontGAMEOVER = pygame.font.Font('src/assets/Gameplay.ttf', GAMEOVER_FONT_SIZE)
+fontTitle = pygame.font.Font('src/assets/Gameplay.ttf', TITLE_FONT_SIZE)
 fontVersion = pygame.font.SysFont('arial', VERSION_FONT_SIZE)
 
 ROW = (0)
@@ -76,39 +76,24 @@ pieceDefs = {
     'L': ((0, 2), (1, 0), (1, 1), (1, 2))}
 
 directions = {
-'down' : (1,0),
-'right' : (0,1),
-'left' : (0,-1),
-'downRight' : (1,1),
-'downLeft' : (1,-1),
-'noMove' : (0,0) }
+    'down': (1, 0),
+    'right': (0, 1),
+    'left': (0, -1),
+    'downRight': (1, 1),
+    'downLeft': (1, -1),
+    'noMove': (0, 0)}
 
-levelSpeeds = (48,43,38,33,28,23,18,13,8,6,5,5,5,4,4,4,3,3,3,2,2,2,2,2,2,2,2,2,2)
-#levelSpeeds = (2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)
-#The speed of the moving piece at each level. Level speeds are defined as levelSpeeds[level]
-#Each 10 cleared lines means a level up.
-#After level 29, speed is always 1. Max level is 99
+levelSpeeds = (48, 43, 38, 33, 28, 23, 18, 13, 8, 6, 5, 5, 5, 4, 4, 4, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+#levelSpeeds = (35,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)
+# The speed of the moving piece at each level. Level speeds are defined as levelSpeeds[level]
+# Each 10 cleared lines means a level up.
+# After level 29, speed is always 1. Max level is 99
 
-baseLinePoints = (0,40,100,300,1200)
-#Total score is calculated as: Score = level*baseLinePoints[clearedLineNumberAtATime] + totalDropCount
-#Drop means the action the player forces the piece down instead of free fall(By key combinations: down, down-left, down-rigth arrows)
-
-#Class implementing random generator algorithm		
-class RandomGenerator:
-    def __init__(self):
-        self.bag = []
-        self.refill_bag()
-
-    def refill_bag(self):
-        self.bag = [0, 1, 2, 3, 4, 5, 6]
-        random.shuffle(self.bag)
-
-    def get_next_piece(self):
-        if len(self.bag) == 0:
-            self.refill_bag()
-        return self.bag.pop(0)
+baseLinePoints = (0, 40, 100, 300, 1200)
 
 
+# Total score is calculated as: Score = level*baseLinePoints[clearedLineNumberAtATime] + totalDropCount
+# Drop means the action the player forces the piece down instead of free fall(By key combinations: down, down-left, down-rigth arrows)
 # Class for the game's timing events
 class GameClock:
 
@@ -165,12 +150,13 @@ class MainBoard:
         self.boardLineWidth = boardLineWidth
         self.blockLineWidth = blockLineWidth
         self.scoreBoardWidth = scoreBoardWidth
-        self.randomGenerator = RandomGenerator()
         self.matrix = [[0] * colNum for i in range(rowNum)]
         self.currentPiece = None
         self.nextPiece = None
         self.newPiece = False
         self.step = 0
+        self.n = Network()
+        self.id = self.n.getId()
 
         # Matrix that contains all the existing blocks in the game board, except the moving piece
         self.blockMat = [['empty'] * colNum for i in range(rowNum)]
@@ -187,7 +173,6 @@ class MainBoard:
         self.score = 0
         self.level = STARTING_LEVEL
         self.lines = 0
-
         self.ntetris = 0
 
     def restart(self):
@@ -235,21 +220,21 @@ class MainBoard:
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.yPos - self.boardLineWidth - self.blockLineWidth,
                                                      (self.blockSize * self.colNum) + (2 * self.boardLineWidth) + (
-                                                                 2 * self.blockLineWidth), self.boardLineWidth], 0)
+                                                             2 * self.blockLineWidth), self.boardLineWidth], 0)
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos + (self.blockSize * self.colNum) + self.blockLineWidth,
                                                      self.yPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.boardLineWidth,
                                                      (self.blockSize * self.rowNum) + (2 * self.boardLineWidth) + (
-                                                                 2 * self.blockLineWidth)], 0)
+                                                             2 * self.blockLineWidth)], 0)
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.yPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.boardLineWidth,
                                                      (self.blockSize * self.rowNum) + (2 * self.boardLineWidth) + (
-                                                                 2 * self.blockLineWidth)], 0)
+                                                             2 * self.blockLineWidth)], 0)
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.yPos + (self.blockSize * self.rowNum) + self.blockLineWidth,
                                                      (self.blockSize * self.colNum) + (2 * self.boardLineWidth) + (
-                                                                 2 * self.blockLineWidth), self.boardLineWidth], 0)
+                                                             2 * self.blockLineWidth), self.boardLineWidth], 0)
 
     def draw_GAMEBOARD_CONTENT(self):
 
@@ -280,6 +265,9 @@ class MainBoard:
                 gameDisplay.blit(pauseText, (self.xPos + +1.65 * self.blockSize, self.yPos + 8 * self.blockSize))
 
             if self.gameStatus == 'gameOver':
+                print("Your final score is:",self.score)
+                self.n.send("over")
+
                 pygame.draw.rect(gameDisplay, LIGHT_GRAY,
                                  [self.xPos + 1 * self.blockSize, self.yPos + 8 * self.blockSize, 8 * self.blockSize,
                                   8 * self.blockSize], 0)
@@ -294,11 +282,11 @@ class MainBoard:
                                                      self.scoreBoardWidth + self.boardLineWidth, self.boardLineWidth],
                          0)
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos + (
-                    self.blockSize * self.colNum) + self.boardLineWidth + self.blockLineWidth + self.scoreBoardWidth,
+                self.blockSize * self.colNum) + self.boardLineWidth + self.blockLineWidth + self.scoreBoardWidth,
                                                      self.yPos - self.boardLineWidth - self.blockLineWidth,
                                                      self.boardLineWidth,
                                                      (self.blockSize * self.rowNum) + (2 * self.boardLineWidth) + (
-                                                                 2 * self.blockLineWidth)], 0)
+                                                             2 * self.blockLineWidth)], 0)
         pygame.draw.rect(gameDisplay, BORDER_COLOR, [self.xPos + (self.blockSize * self.colNum) + self.blockLineWidth,
                                                      self.yPos + (self.blockSize * self.rowNum) + self.blockLineWidth,
                                                      self.scoreBoardWidth + self.boardLineWidth, self.boardLineWidth],
@@ -360,10 +348,8 @@ class MainBoard:
         linesNumText = fontSB.render(str(self.lines), False, NUM_COLOR)
         gameDisplay.blit(linesNumText, (xPosRef + self.blockSize - 10, yLastBlock - 2 * self.blockSize))
 
-        ntetrisText = fontSB.render('number of tetris:', False, TEXT_COLOR)
+        ntetrisText = fontSB.render('Player 1', False, TEXT_COLOR)
         gameDisplay.blit(ntetrisText, (0, 0))
-        ntetrisText = fontSB.render(str(self.ntetris), False, NUM_COLOR)
-        gameDisplay.blit(ntetrisText, (230, 0))
 
     # All the screen drawings occurs in this function, called at each game loop iteration
     def draw(self):
@@ -433,13 +419,14 @@ class MainBoard:
         return clearedLines
 
     def prepareNextSpawn(self):
-        self.generateNextPiece()
-        self.lineClearStatus = 'idle'
-        self.piece.status = 'uncreated'
+        if self.gameStatus != "gameOver":
+            self.generateNextPiece()
+            self.lineClearStatus = 'idle'
+            self.piece.status = 'uncreated'
 
     def generateNextTwoPieces(self):
-        self.nextPieces[0] = pieceNames[self.randomGenerator.get_next_piece()]
-        self.nextPieces[1] = pieceNames[self.randomGenerator.get_next_piece()]
+        self.nextPieces[0] = pieceNames[int(self.n.send(self.id))]
+        self.nextPieces[1] = pieceNames[int(self.n.send(self.id))]
         self.piece.type = self.nextPieces[0]
         c = self.nextPieces[0].lower()
         n = self.nextPieces[1].lower()
@@ -448,7 +435,7 @@ class MainBoard:
 
     def generateNextPiece(self):
         self.nextPieces[0] = self.nextPieces[1]
-        self.nextPieces[1] = pieceNames[self.randomGenerator.get_next_piece()]
+        self.nextPieces[1] = pieceNames[int(self.n.send(self.id))]
         self.piece.type = self.nextPieces[0]
         c = self.nextPieces[0].lower()
         n = self.nextPieces[1].lower()
@@ -492,8 +479,6 @@ class MainBoard:
         if clearedLinesNum == 4:
             self.ntetris += 1
 
-    # print(f"linee completate: {clearedLinesNum}")
-
     def updateSpeed(self):
 
         if self.level < 29:
@@ -536,6 +521,12 @@ class MainBoard:
                     self.lineClearAnimation()
                 else:  # 'clearFin'
                     self.dropFreeBlocks()
+                    gameDisplay.fill(
+                        BLACK)  # Whole screen is painted black in every iteration before any other drawings occur
+                    self.draw()  # Draw the new board after game the new game actions
+                    gameClock.update()  # Increment the frame tick
+                    pygame.display.update()  # Pygame display update
+                    clock.tick(60)  # Pygame clock tick function(60 fps)
                     self.prepareNextSpawn()
 
     def move(self, right, left, number):
@@ -792,9 +783,8 @@ def gameLoop():
     mainBoard = MainBoard(blockSize, boardPosX, boardPosY, boardColNum, boardRowNum, boardLineWidth, blockLineWidth,
                           scoreBoardWidth)
 
-    gameExit = False
-    aiPlayer = AiTwo()
-    while not gameExit:  # Stay in this loop unless the game is quit
+    aiPlayer = AiHandler()
+    while mainBoard.gameStatus != "gameOver":  # Stay in this loop unless the game is quit
         if mainBoard.isNewPiece():
             aiPlayer.clearVariableProgram()
             matrix = mainBoard.getMatrix()
@@ -839,7 +829,7 @@ def makeTextObjs(text, font, color):
 
 def showTextScreen(text):
     loop = True
-    image = pygame.image.load("src/tetris.jpg")
+    image = pygame.image.load("src/assets/tetris.jpg")
     screenUpdate = pygame.transform.scale(image, (800, 600))
     gameDisplay.blit(screenUpdate, (0, 0))
     titleSurf, titleRect = makeTextObjs(text, fontTitle, WHITE)

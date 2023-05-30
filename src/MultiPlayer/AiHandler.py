@@ -21,7 +21,7 @@ from NextPiece import NextPiece
 import platform
 
 
-class AiTwo():
+class AiHandler():
 
     file_name1 = "ai/tetris2.asp"
     file_name2 = "ai/tetris1.asp"
@@ -34,7 +34,7 @@ class AiTwo():
     #executable_name = "executable/dlv-2.1.1-linux-x86_64"
 
     def __init__(self):
-        self.handler = DesktopHandler(DLV2DesktopService(AiTwo.executable_name))
+        self.handler = DesktopHandler(DLV2DesktopService(AiHandler.executable_name))
         ASPMapper.get_instance().register_class(Cell)
         ASPMapper.get_instance().register_class(CurrentPiece)
         ASPMapper.get_instance().register_class(In)
@@ -44,7 +44,7 @@ class AiTwo():
         self.variableProgram = ASPInputProgram()
         self.handler.add_program(self.fixedProgram)
         self.handler.add_program(self.variableProgram)
-        self.fixedProgram.add_files_path(AiTwo.mappings)
+        self.fixedProgram.add_files_path(AiHandler.mappings)
         o = OptionDescriptor("--filter=output/2")
         self.handler.add_option(o)
 
@@ -54,12 +54,12 @@ class AiTwo():
                 self.variableProgram.add_object_input(Cell(i,j,matrix[i][j]))
         c = CurrentPiece(currentPiece)
         if nextPiece != None:
-            AiTwo.to_execute = AiTwo.file_name1
+            AiHandler.to_execute = AiHandler.file_name1
             n = NextPiece(nextPiece)
             self.variableProgram.add_object_input(n)
         else:
-            AiTwo.to_execute = AiTwo.file_name2
-        self.variableProgram.add_files_path(AiTwo.to_execute)
+            AiHandler.to_execute = AiHandler.file_name2
+        self.variableProgram.add_files_path(AiHandler.to_execute)
         self.variableProgram.add_object_input(c)
 
 
@@ -89,6 +89,4 @@ class MyCallback(Callback):
                     elif n<0:
                         self.mainBoard.move(False,True,abs(n))
                     self.mainBoard.drop()
-                #if isinstance(obj,In):
-                    #print(obj)
                         
