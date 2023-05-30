@@ -35,4 +35,4 @@ This project is licensed under the [MIT](LICENSE.md)
 
 ## Acknowledgments
 
-  - Initial game: 
+  - Game from: https://github.com/ibrahimAtespare/tetris-python
