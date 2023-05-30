@@ -10,7 +10,7 @@ Single player and multiplayer game with AI player.
 - [Pygame](https://www.pygame.org/news)
 - [EmbAsp](https://www.mat.unical.it/calimeri/projects/embasp/)
 
-### How to start
+### How to play
 
 Single player
 
