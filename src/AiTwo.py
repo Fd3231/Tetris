@@ -9,6 +9,7 @@ from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
 from NextPiece import NextPiece
+import platform
 
 
 class AiTwo():
@@ -17,7 +18,10 @@ class AiTwo():
     file_name2 = "../ai/tetris1"
     to_execute = file_name1
     mappings = "../ai/mappings"
-    executable_name = "../executable/dlv-2.1.1-macos"
+    if platform.system() == "Darwin":
+        executable_name = "../executable/dlv-2.1.1-macos"
+    if platform.system() == "Windows":
+        executable_name = "../executable/dlv-2.1.1-windows.exe"
     #executable_name = "executable/dlv-2.1.1-linux-x86_64"
 
     def __init__(self):
