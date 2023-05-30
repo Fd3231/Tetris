@@ -1,4 +1,4 @@
-from languages.predicate import Predicate
+from lib.embasp.languages.predicate import Predicate
 
 class CurrentPiece(Predicate):
     predicate_name="currentpiece"

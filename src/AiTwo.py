@@ -1,9 +1,9 @@
-from platforms.desktop.desktop_handler import DesktopHandler
-from specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
-from languages.asp.asp_mapper import ASPMapper
-from languages.asp.asp_input_program import ASPInputProgram
-from languages.asp.asp_filter_option import OptionDescriptor
-from base.callback import Callback
+from lib.embasp.platforms.desktop.desktop_handler import DesktopHandler
+from lib.embasp.specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
+from lib.embasp.languages.asp.asp_mapper import ASPMapper
+from lib.embasp.languages.asp.asp_input_program import ASPInputProgram
+from lib.embasp.languages.asp.asp_filter_option import OptionDescriptor
+from lib.embasp.base.callback import Callback
 from Cell import Cell
 from CurrentPiece import CurrentPiece
 from In import In
@@ -13,11 +13,11 @@ from NextPiece import NextPiece
 
 class AiTwo():
 
-    file_name1 = "ai/tetris2"
-    file_name2 = "ai/tetris1"
+    file_name1 = "../ai/tetris2"
+    file_name2 = "../ai/tetris1"
     to_execute = file_name1
-    mappings = "ai/mappings"
-    executable_name = "executable/dlv-2.1.1-windows64.exe"
+    mappings = "../ai/mappings"
+    executable_name = "../executable/dlv-2.1.1-macos"
     #executable_name = "executable/dlv-2.1.1-linux-x86_64"
 
     def __init__(self):
