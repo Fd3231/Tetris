@@ -1,3 +1,5 @@
+% tetris1 con pezzo corrente e successivo
+
 row(0..19). col(0..9).
 
 piece(P,2) :- nextpiece(P).
@@ -38,12 +40,15 @@ ceunacella(X,Y):- in(X,Y,PIECE,_,N), piece(PIECE,N).
 minCol(M) :- #min{Y,X : in(X,Y,PIECE,R,1), currentpiece(PIECE)} = M.
 output(M,R) :- minCol(M), in(X,M,PIECE,R,1), currentpiece(PIECE).
 
+%preferisci posizione piu bassa quando l'altezza è superiore a 8
+:~ newcell(X,Y,1), X<8. [1@3,X,Y]
+
 % linee completate
 fullRows(X) :- row(X), #count{Y : newcell(X,Y,1)} = 10.
 :~ row(X), not fullRows(X). [2@3,X] %2
 
 % numero di buchi
-:~ newcell(X,Y,0), newcell(X1,Y,1), X1<X. [5@3,X,Y]
+:~ newcell(X,Y,0), newcell(X1,Y,1), X1<X, not fullRows(X1). [5@3,X,Y]
 
 number(-20..20).
 % differenza tra le altezze delle colonne
@@ -52,5 +57,6 @@ minNewCell(V,Y) :- col(Y), V=19, not exists(Y).
 exists(Y) :- newcell(_,Y,1).
 :~ number(V), minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2. [S@3,Y1,Y2] %3
 
-%preferisci posizione piu bassa
-:~ newcell(X,Y,1), X<8. [1@3,X,Y]
+% La prima colonna deve essere più alta
+:~ newcell(X,0,0), minRow(R), X>R. [1@3,X]
+minRow(R) :- #min{X : newcell(X,Y,1)} = R.

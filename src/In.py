@@ -1,5 +1,5 @@
-from lib.embasp.languages.predicate import Predicate
-from lib.embasp.languages.asp.symbolic_constant import SymbolicConstant
+#from lib.embasp.languages.predicate import Predicate
+from languages.predicate import Predicate
 
 class In(Predicate):
     predicate_name="in"

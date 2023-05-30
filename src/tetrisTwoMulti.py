@@ -36,12 +36,12 @@ GAMEOVER_FONT_SIZE = 66
 TITLE_FONT_SIZE = 65
 VERSION_FONT_SIZE = 20
 
-fontSB = pygame.font.Font('../src/Gameplay.ttf', SB_FONT_SIZE)
-fontSmall = pygame.font.Font('../src/Gameplay.ttf', FONT_SIZE_SMALL)
-fontPAUSE = pygame.font.Font('../src/Gameplay.ttf', PAUSE_FONT_SIZE)
-fontGAMEOVER = pygame.font.Font('../src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
-fontTitle = pygame.font.Font('../src/Gameplay.ttf', TITLE_FONT_SIZE)
-fontVersion = pygame.font.SysFont('../arial', VERSION_FONT_SIZE)
+fontSB = pygame.font.Font('src/Gameplay.ttf', SB_FONT_SIZE)
+fontSmall = pygame.font.Font('src/Gameplay.ttf', FONT_SIZE_SMALL)
+fontPAUSE = pygame.font.Font('src/Gameplay.ttf', PAUSE_FONT_SIZE)
+fontGAMEOVER = pygame.font.Font('src/Gameplay.ttf', GAMEOVER_FONT_SIZE)
+fontTitle = pygame.font.Font('src/Gameplay.ttf', TITLE_FONT_SIZE)
+fontVersion = pygame.font.SysFont('arial', VERSION_FONT_SIZE)
 
 ROW = (0)
 COL = (1)
@@ -783,7 +783,6 @@ def gameLoop():
     mainBoard = MainBoard(blockSize, boardPosX, boardPosY, boardColNum, boardRowNum, boardLineWidth, blockLineWidth,
                           scoreBoardWidth)
 
-    gameExit = False
     aiPlayer = AiTwo()
     while mainBoard.gameStatus != "gameOver":  # Stay in this loop unless the game is quit
         if mainBoard.isNewPiece():
@@ -830,7 +829,7 @@ def makeTextObjs(text, font, color):
 
 def showTextScreen(text):
     loop = True
-    image = pygame.image.load("../src/tetris.jpg")
+    image = pygame.image.load("src/tetris.jpg")
     screenUpdate = pygame.transform.scale(image, (800, 600))
     gameDisplay.blit(screenUpdate, (0, 0))
     titleSurf, titleRect = makeTextObjs(text, fontTitle, WHITE)

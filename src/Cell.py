@@ -1,4 +1,5 @@
-from lib.embasp.languages.predicate import Predicate
+#from lib.embasp.languages.predicate import Predicate
+from languages.predicate import Predicate
 
 class Cell(Predicate):
     predicate_name="cell"
