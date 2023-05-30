@@ -1,3 +1,12 @@
+
+"""
+from lib.embasp.platforms.desktop.desktop_handler import DesktopHandler
+from lib.embasp.specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
+from lib.embasp.languages.asp.asp_mapper import ASPMapper
+from lib.embasp.languages.asp.asp_input_program import ASPInputProgram
+from lib.embasp.languages.asp.asp_filter_option import OptionDescriptor
+from lib.embasp.base.callback import Callback
+"""
 from platforms.desktop.desktop_handler import DesktopHandler
 from specializations.dlv2.desktop.dlv2_desktop_service import DLV2DesktopService
 from languages.asp.asp_mapper import ASPMapper
@@ -9,6 +18,7 @@ from CurrentPiece import CurrentPiece
 from In import In
 from Output import Output
 from NextPiece import NextPiece
+import platform
 
 
 class AiTwo():
@@ -17,7 +27,10 @@ class AiTwo():
     file_name2 = "ai/tetris1.asp"
     to_execute = file_name1
     mappings = "ai/mappings.asp"
-    executable_name = "executable/dlv-2.1.1-windows64.exe"
+    if platform.system() == "Darwin":
+        executable_name = "executable/dlv-2.1.1-macos"
+    if platform.system() == "Windows":
+        executable_name = "executable/dlv-2.1.1-windows64.exe"
     #executable_name = "executable/dlv-2.1.1-linux-x86_64"
 
     def __init__(self):
@@ -35,12 +48,12 @@ class AiTwo():
         o = OptionDescriptor("--filter=output/2")
         self.handler.add_option(o)
 
-    def changeVariableProgram(self,matrix,currentPiece,nextPiece,switch):
+    def changeVariableProgram(self,matrix,currentPiece,nextPiece):
         for i in range(20):
             for j in range(10):
                 self.variableProgram.add_object_input(Cell(i,j,matrix[i][j]))
         c = CurrentPiece(currentPiece)
-        if switch:
+        if nextPiece != None:
             AiTwo.to_execute = AiTwo.file_name1
             n = NextPiece(nextPiece)
             self.variableProgram.add_object_input(n)

@@ -27,10 +27,10 @@ hasbelow(PIECE) :- in(X,Y,PIECE,ROTATION), cell(X+1,Y,1).
 % matrice su cui si applicheranno i weak constraints
 newcell(X,Y,1) :- in(X,Y,PIECE,ROTATION).
 newcell(X,Y,V) :- cell(X,Y,V), not newblock(X,Y). % scarta le celle che prima di mettere il nuovo pezzo erano vuote
-newblock(X,Y):- in(X,Y,PIECE,_). 
+newblock(X,Y):- in(X,Y,PIECE,_).
 
 minCol(M) :- #min{Y,X : in(X,Y,PIECE,R)} = M.
-output(M,R) :- minCol(M), in(X,M,_,R). 
+output(M,R) :- minCol(M), in(X,M,_,R).
 
 %preferisci posizione piu bassa quando l'altezza è superiore a 8
 :~ newcell(X,Y,1), X<8. [1@3,X,Y]
