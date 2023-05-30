@@ -12,6 +12,7 @@ pres(Y) :- cell(_,Y,1).
 % un pezzo è formato da quattro blocchi
 :- #count{X,Y : in(X,Y,PIECE,ROTATION)} != 4.
 
+% mapping del pezzo
 :- currentpiece(PIECE), not sameshape(PIECE).
 sameshape(PIECE):- rotation(PIECE,ROTATION), in(X1,Y1,PIECE,ROTATION), in(X2,Y2,PIECE,ROTATION), block(1,PIECE,ROTATION,R1,C1), X2=X1+R1, Y2=Y1+C1,
 in(X3,Y3,PIECE,ROTATION), block(2,PIECE,ROTATION,R2,C2), X3=X2+R2, Y3=Y2+C2, in(X4,Y4,PIECE,ROTATION), block(3,PIECE,ROTATION,R3,C3), X4=X3+R3, Y4=Y3+C3.
@@ -32,6 +33,9 @@ newblock(X,Y):- in(X,Y,PIECE,_).
 minCol(M) :- #min{Y,X : in(X,Y,PIECE,R)} = M.
 output(M,R) :- minCol(M), in(X,M,_,R). 
 
+%preferisci posizione piu bassa quando l'altezza è superiore a 8
+:~ newcell(X,Y,1), X<8. [1@3,X,Y]
+
 % linee completate
 fullRows(X) :- row(X), #count{Y : newcell(X,Y,1)} = 10.
 :~ row(X), not fullRows(X). [2@3,X] %2
@@ -46,14 +50,6 @@ minNewCell(V,Y) :- col(Y), V=19, not exists(Y).
 exists(Y) :- newcell(_,Y,1).
 :~ number(V), minNewCell(V1,Y1), minNewCell(V2,Y2), Y2=Y1+1, &abs(V;S), V=V1-V2, V1!=V2. [S@3,Y1,Y2] %3
 
-%preferisci posizione piu bassa
-:~ newcell(X,Y,1), X<8. [1@3,X,Y]
-
+% La prima colonna deve essere più alta
 :~ newcell(X,0,0), minRow(R), X>R. [1@3,X]
-
 minRow(R) :- #min{X : newcell(X,Y,1)} = R.
-%minRow(R) :- R=19, not exists.
-
-%exists :- newcell(_,_,1).
-
-

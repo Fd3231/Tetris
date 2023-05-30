@@ -13,10 +13,10 @@ from NextPiece import NextPiece
 
 class AiTwo():
 
-    file_name1 = "ai/tetris2"
-    file_name2 = "ai/tetris1"
+    file_name1 = "ai/tetris2.asp"
+    file_name2 = "ai/tetris1.asp"
     to_execute = file_name1
-    mappings = "ai/mappings"
+    mappings = "ai/mappings.asp"
     executable_name = "executable/dlv-2.1.1-windows64.exe"
     #executable_name = "executable/dlv-2.1.1-linux-x86_64"
 
@@ -26,6 +26,7 @@ class AiTwo():
         ASPMapper.get_instance().register_class(CurrentPiece)
         ASPMapper.get_instance().register_class(In)
         ASPMapper.get_instance().register_class(Output)
+        ASPMapper.get_instance().register_class(NextPiece)
         self.fixedProgram = ASPInputProgram()
         self.variableProgram = ASPInputProgram()
         self.handler.add_program(self.fixedProgram)

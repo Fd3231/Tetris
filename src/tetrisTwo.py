@@ -83,8 +83,8 @@ directions = {
 'downLeft' : (1,-1),
 'noMove' : (0,0) }
 
-#levelSpeeds = (48,43,38,33,28,23,18,13,8,6,5,5,5,4,4,4,3,3,3,2,2,2,2,2,2,2,2,2,2)
-levelSpeeds = (2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)
+levelSpeeds = (48,43,38,33,28,23,18,13,8,6,5,5,5,4,4,4,3,3,3,2,2,2,2,2,2,2,2,2,2)
+#levelSpeeds = (2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2)
 #The speed of the moving piece at each level. Level speeds are defined as levelSpeeds[level]
 #Each 10 cleared lines means a level up.
 #After level 29, speed is always 1. Max level is 99
@@ -743,7 +743,10 @@ def gameLoop():
 			if mainBoard.checkHeight():
 				switch = False
 			aiPlayer.changeVariableProgram(matrix,currentPiece,nextPiece,switch)
-			aiPlayer.execute(mainBoard)
+			if mainBoard.getLevel() > 29:
+				aiPlayer.execute(mainBoard,1)
+			else:
+				aiPlayer.execute(mainBoard,levelSpeeds[mainBoard.getLevel()])
 			mainBoard.setNewPiece()
 		
 		for event in pygame.event.get():
