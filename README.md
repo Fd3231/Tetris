@@ -16,8 +16,6 @@ Single player
 
     python3 SinglePlayer.py
 
-### Multiplayer
-
 Multiplayer
 
     python3 Server.py
